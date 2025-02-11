@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const { userId, title, category } = req.body;
+        console.log(req.body);
         const task = new Task({ userId, title, category });
         await task.save();
         res.json(task);

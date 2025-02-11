@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const TaskSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    userId: { type: String, ref: "User" },
     title: String,
     category: String, // Quadrants (Urgent & Important, etc.)
     completed: { type: Boolean, default: false },
