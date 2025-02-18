@@ -1,12 +1,18 @@
 const express = require("express");
 const Task = require("../models/Task");
+const { getTaskInsights } = require("../utils/geminiHelper");
 
 const router = express.Router();
 
 //  Fetch All Tasks (GET)
 router.get("/", async (req, res) => {
     try {
-        const tasks = await Task.find();
+        // Option 1: Get userId from query parameters
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+        const tasks = await Task.find({ userId });
         res.json(tasks);
     } catch (error) {
         console.error("GET /tasks error:", error);
@@ -25,5 +31,18 @@ router.post("/", async (req, res) => {
         res.status(500).json({ error: "Server Error" });
     }
 });
+//AI insights
+// Fetch AI Insights for Tasks
+router.get("/insights", async (req, res) => {
+    try {
+        const tasks = await Task.find();  // Fetch all tasks from the database
+        const insights = await getTaskInsights(tasks);  // Get insights from Gemini AI
+        res.json({ insights });
+    } catch (error) {
+        console.error("AI Insights Error:", error);
+        res.status(500).json({ error: "Failed to fetch AI insights" });
+    }
+});
+
 
 module.exports = router;
