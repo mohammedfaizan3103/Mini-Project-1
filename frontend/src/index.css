@@ -1,4 +1,9 @@
 /* index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -6,7 +11,7 @@ body {
   padding: 0;
 }
 
-.container {
+.container_ {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
@@ -50,6 +55,5 @@ h2 {
 .task {
   background: #f9f9f9;
   padding: 10px;
-  margin-top: 5px;
   border-radius: 5px;
 }
