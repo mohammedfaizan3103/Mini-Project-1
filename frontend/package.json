@@ -12,7 +12,8 @@
   "dependencies": {
     "axios": "^1.7.9",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -27,6 +28,6 @@
     "globals": "^15.14.0",
     "postcss": "^8.5.2",
     "tailwindcss": "^3.2.7",
-    "vite": "^6.1.0" 
+    "vite": "^6.1.0"
   }
 }
