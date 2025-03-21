@@ -1,8 +1,27 @@
 import React from "react";
-import "../index.css";
-import "./navbar.css"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "./Navbar.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:5000/api/auth/logout", { withCredentials: true });
+
+      // ✅ Clear session storage and user data
+      sessionStorage.clear();
+
+      // ✅ Slight delay to prevent session conflicts
+      setTimeout(() => {
+        navigate("/login");
+      }, 300);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <nav className="navbar">
       <ul>
@@ -10,7 +29,7 @@ const Navbar = () => {
         <li><a href="#">Tasks</a></li>
         <li><a href="#">Timetable</a></li>
         <li><a href="#">Profile</a></li>
-        <li><a href="#">Logout</a></li>
+        <li><button onClick={handleLogout}>Logout</button></li>
       </ul>
     </nav>
   );

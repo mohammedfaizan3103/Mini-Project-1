@@ -17,7 +17,7 @@ const MenteeSchema = new Schema({
         required: true,
         unique: true
     },
-    phoneNumber: {
+    phone: {
         type: String,
         required: true
     },

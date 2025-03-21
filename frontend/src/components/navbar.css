@@ -1,23 +1,36 @@
 .navbar {
-    background: #333;
-    padding: 10px;
-  }
-  
-  .navbar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .navbar ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-  }
-  
-  .navbar ul li a:hover {
-    text-decoration: underline;
-  }
-  
+  background: #333;
+  padding: 10px;
+}
+
+.navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* ✅ Style both <a> and <button> the same way */
+.navbar ul li a,
+.navbar ul li button {
+  color: white;
+  background: transparent;     /* Make button transparent */
+  border: none;
+  text-decoration: none;
+  font-size: 18px;
+  cursor: pointer;              /* Ensure button has pointer cursor */
+  padding: 0;                   /* Remove default button padding */
+  font-family: inherit;         /* Inherit font */
+}
+
+.navbar ul li a:hover,
+.navbar ul li button:hover {
+  text-decoration: underline;
+}
+
+/* ✅ Remove button outline on focus */
+.navbar ul li button:focus {
+  outline: none;
+}
