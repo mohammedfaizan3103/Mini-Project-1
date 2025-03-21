@@ -10,13 +10,29 @@ export default function Register() {
     role: "mentor", // Default role is Mentor
     mentorUsername: "" // Only needed if role is Mentee
   });
+  
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === "password") {
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordRegex.test(value)) {
+        setPasswordError("Password must be at least 8 characters long and include a number and a special character.");
+      } else {
+        setPasswordError("");
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (passwordError) {
+      alert("Please fix password requirements before submitting.");
+      return;
+    }
     console.log("Registration Data Submitted:", formData);
   };
 
@@ -35,7 +51,8 @@ export default function Register() {
           <input type="text" name="username" className="w-full p-2 border rounded mb-4" onChange={handleChange} required />
           
           <label className="block mb-2">Password</label>
-          <input type="password" name="password" className="w-full p-2 border rounded mb-4" onChange={handleChange} required />
+          <input type="password" name="password" className="w-full p-2 border rounded mb-2" onChange={handleChange} required />
+          {passwordError && <p className="text-red-500 text-sm mb-4">{passwordError}</p>}
           
           <label className="block mb-2">Phone</label>
           <input type="tel" name="phone" className="w-full p-2 border rounded mb-4" onChange={handleChange} required />
