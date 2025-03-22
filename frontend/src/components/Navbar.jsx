@@ -27,7 +27,7 @@ const Navbar = () => {
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Tasks</a></li>
-        <li><a href="#">Timetable</a></li>
+        <li><a href="timetable">Timetable</a></li>
         <li><a href="#">Profile</a></li>
         <li><button onClick={handleLogout}>Logout</button></li>
       </ul>

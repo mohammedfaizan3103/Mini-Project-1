@@ -5,6 +5,8 @@ import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import axios from "axios";
+import Timetable from "./components/Timetable";
+import { useLocation } from "react-router-dom";
 
 const AppWrapper = () => (
   <Router>
@@ -16,6 +18,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();  // Get the current location
 
   useEffect(() => {
     const checkSession = async () => {
@@ -26,7 +29,10 @@ function App() {
 
         if (response.data.user) {
           setUser(response.data.user);
-          navigate("/dashboard");
+          // Only redirect to dashboard if on root or login/register
+          if (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/register") {
+            navigate("/dashboard");
+          }
         } else {
           navigate("/login");
         }
@@ -39,7 +45,7 @@ function App() {
     };
 
     checkSession();
-  }, [navigate]);
+  }, [navigate, location]);  // Add `location` dependency
 
   if (loading) return <div>Loading...</div>;
 
@@ -51,6 +57,7 @@ function App() {
         <Route path="/" element={<Dashboard user={user} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/timetable" element={<Timetable />} />
         <Route path="/dashboard" element={<Dashboard user={user} />} />
       </Routes>
     </>
