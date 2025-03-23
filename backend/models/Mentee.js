@@ -1,8 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
-
-const MenteeSchema = new Schema({
+const MenteeSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -22,20 +20,21 @@ const MenteeSchema = new Schema({
         required: true
     },
     mentor: {
-        type: Schema.Types.ObjectId,
-        ref: 'Mentor'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Mentor"
     },
     tasks: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Task'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Task"
     }],
-    previous_insights: {
-        qualitative_trends: [String],
-        pattern_detection: [String],
-        improvement_areas: [String],
-        missed_tasks_text: String
-    },
-    mentor_feedback: String
+    previous_insights: [{
+        text: String,
+        date: { type: Date, default: Date.now }
+    }],
+    mentor_feedback: [{
+        text: String,
+        date: { type: Date, default: Date.now }
+    }]
 });
 
-module.exports = mongoose.model('Mentee', MenteeSchema);
+module.exports = mongoose.model("Mentee", MenteeSchema);
