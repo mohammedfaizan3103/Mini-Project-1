@@ -1,0 +1,180 @@
+1. PROMPT NUMBER 1 WITHOUT TASK LIST
+const prompt = `
+Generate a detailed and easy-to-display performance review based on the following task data:
+
+**Current week:**
+- Tasks completed: ${current.tasks_completed}
+- Tasks delayed: ${current.tasks_delayed}
+- Average delay: ${current.average_delay_hours} hours
+- Urgent tasks: ${current.urgent_tasks}
+- Delayed urgent tasks: ${current.delayed_urgent_tasks}
+
+**Previous week:**
+- Tasks completed: ${previous.tasks_completed}
+- Tasks delayed: ${previous.tasks_delayed}
+
+**Task Categories:**
+- urgent_important: Critical tasks with significant impact.
+- urgent_not_important: Immediate but low-impact tasks.
+- not_urgent_important: High-impact but flexible tasks.
+- not_urgent_not_important: Low-priority and flexible tasks.
+
+---
+
+### **Instructions:**
+
+1. **Generate Insights:**
+   - Compare this week's performance with the previous week.
+   - Highlight key trends in task completion, delays, and overall productivity.
+   - Identify patterns specific to the provided categories (e.g., are more urgent tasks being delayed?).
+   - Provide **clear, concise insights** relevant to the current and previous week.
+
+2. **Pattern Detection:**
+   - Detect if certain categories (urgent, important, etc.) have **more frequent delays** or lower completion rates.
+   - Identify recurring issues across weeks, such as:
+     - Consistent delays in certain categories.
+     - Frequent postponement of important but not urgent tasks.
+     - Neglect of lower-priority tasks.
+
+3. **Missed Tasks Summary (Text-Based):**
+   - Generate a **short, readable summary** describing the missed tasks.
+   - Include the **number of missed tasks by category** (urgent, important, etc.).
+   - Highlight which categories are most frequently delayed.
+   - Keep the summary clear and easy to display.
+
+4. **Improvement Areas:**
+   - Provide **2-4 specific, actionable suggestions** based on the current trends.
+   - Tailor the suggestions to the categories, e.g.:
+     - If urgent tasks are frequently missed → Suggest better prioritization.
+     - If not urgent but important tasks are neglected → Recommend time-blocking strategies.
+     - Suggest delegation or simplification if low-impact tasks are taking too much time.
+
+---
+
+### **Response Format:**
+Format the response in JSON with the following structure:
+\`\`\`json
+{
+  "insights": {
+    "summary": "<Performance summary based on provided data>",
+    "comparison": {
+      "completed_increase": "<%>",
+      "delay_reduction": "<%>"
+    },
+    "pattern_detection": [
+      "<Recurring issue 1>",
+      "<Recurring issue 2>"
+    ],
+    "improvement_areas": [
+      "<Specific improvement 1>",
+      "<Specific improvement 2>"
+    ],
+    "missed_tasks_summary": {
+      "urgent_important": <count>,
+      "urgent_not_important": <count>,
+      "not_urgent_important": <count>,
+      "not_urgent_not_important": <count>
+    },
+    "missed_tasks_text": "<Short, readable summary of missed tasks>"
+  }
+}
+\`\`\`
+`;
+
+2. PROMPT NUMBER 2 WITH TASK LIST
+const prompt = `
+Generate a detailed and easy-to-display performance review based on the following task data:
+
+---
+
+### **Current week:**
+- Tasks completed: ${current.tasks_completed}
+- Tasks delayed: ${current.tasks_delayed}
+- Average delay: ${current.average_delay_hours} hours
+- Urgent tasks: ${current.urgent_tasks}
+- Delayed urgent tasks: ${current.delayed_urgent_tasks}
+
+---
+
+### **Previous week:**
+- Tasks completed: ${previous.tasks_completed}
+- Tasks delayed: ${previous.tasks_delayed}
+
+---
+
+### **Task Categories:**
+- urgent_important: Critical tasks with significant impact.
+- urgent_not_important: Immediate but low-impact tasks.
+- not_urgent_important: High-impact but flexible tasks.
+- not_urgent_not_important: Low-priority and flexible tasks.
+
+---
+
+### **Task List:**
+Analyze the following list of tasks. Identify patterns, common issues, and improvement areas based on the task names, categories, and completion status.
+
+\`\`\`json
+${JSON.stringify(taskData.tasks, null, 2)}
+\`\`\`
+
+---
+
+### **Instructions:**
+
+1. **Generate Insights Based on Tasks:**
+   - Compare this week's performance with the previous week.
+   - Identify key trends in task completion, delays, and overall productivity.
+   - Detect **patterns in task names**:
+     - Identify if certain types of tasks (based on recurring keywords) are frequently delayed.
+     - Highlight categories with consistent delays.
+   - Summarize **specific insights** related to the task list.
+
+2. **Pattern Detection:**
+   - Detect **recurring issues** based on the task content.
+   - Identify common themes in delayed or frequently missed tasks (e.g., meetings, reports, approvals).
+   - Group tasks by category and analyze the most frequently delayed or missed categories.
+
+3. **Missed Tasks Summary (Text-Based):**
+   - Generate a **short, readable summary** describing the missed tasks.
+   - Include the **number of missed tasks by category**.
+   - Mention specific task names or common task types in the summary.
+   - Make the summary concise and easy to display.
+
+4. **Improvement Areas:**
+   - Provide **2-4 actionable suggestions** based on task patterns.
+   - Make the suggestions specific and practical:
+     - If recurring types of tasks are frequently delayed → Suggest prioritization or scheduling strategies.
+     - If a specific category is neglected → Recommend more dedicated time blocks or delegation strategies.
+     - If urgent but low-impact tasks are over-consuming time → Recommend task batching or delegation.
+
+---
+
+### **Response Format:**
+Format the response in JSON with the following structure:
+\`\`\`json
+{
+  "insights": {
+    "summary": "<Performance summary based on provided data>",
+    "comparison": {
+      "completed_increase": "<%>",
+      "delay_reduction": "<%>"
+    },
+    "pattern_detection": [
+      "<Recurring issue 1>",
+      "<Recurring issue 2>"
+    ],
+    "improvement_areas": [
+      "<Specific improvement 1>",
+      "<Specific improvement 2>"
+    ],
+    "missed_tasks_summary": {
+      "urgent_important": <count>,
+      "urgent_not_important": <count>,
+      "not_urgent_important": <count>,
+      "not_urgent_not_important": <count>
+    },
+    "missed_tasks_text": "<Short, readable summary of missed tasks>"
+  }
+}
+\`\`\`
+`;
