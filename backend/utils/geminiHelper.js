@@ -2,21 +2,30 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require("dotenv").config();
 
-const client = new GoogleGenerativeAI({
-    apiKey: process.env.GEMINI_API_KEY,
-});
+// Initialize Google AI client
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function getTaskInsights(tasks) {
     try {
-        const response = await client.generateText({
-            prompt: `Provide insights on the following tasks: ${JSON.stringify(tasks)}`,
-            temperature: 0.7,
-            maxTokens: 100,
-        });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" }); // Use the latest available model
+        
+        const prompt = `Analyze the following tasks and provide insights:
+        ${JSON.stringify(tasks)}
+        
+        - Identify patterns in task completion and delays.
+        - Suggest improvements for better productivity.
+        - Provide a short AI-generated review.`;
 
-        return response.text;
+        // Send the prompt to Gemini 2.0
+        const result = await model.generateContent([prompt]);
+
+        // Extract text response
+        const response = await result.response;
+        const text = response.text();
+
+        return text;
     } catch (error) {
-        console.error("Error getting AI insights:", error);
+        console.error("❌ Error getting AI insights:", error);
         throw error;
     }
 }

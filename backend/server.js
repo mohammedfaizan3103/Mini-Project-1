@@ -4,6 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const insightsRoutes = require("./routes/insights");
 
 const app = express();
 connectDB();
@@ -48,5 +49,6 @@ app.use(
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 app.use("/api/timetable", require("./routes/timetableRoutes"));
+app.use("/api/insights", insightsRoutes);
 
 app.listen(5000, () => console.log("🚀 Server running on port 5000"));
