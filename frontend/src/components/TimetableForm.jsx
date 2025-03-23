@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 
-
 const TimetableForm = ({ selectedTimetable, onSave, onUpdate }) => {
     const [name, setName] = useState('');
     const [tasks, setTasks] = useState([]);

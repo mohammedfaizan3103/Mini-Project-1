@@ -46,6 +46,10 @@ export default function Login() {
     }
   };
 
+  const handleRegisterClick = () => {
+    navigate("/register"); // Redirect to the registration page
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="p-6 bg-white shadow-md rounded-md w-96">
@@ -88,10 +92,18 @@ export default function Login() {
           </select>
 
           {/* Submit Button */}
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
+          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded mb-4">
             Login
           </button>
         </form>
+
+        {/* Register Button */}
+        <button
+          onClick={handleRegisterClick}
+          className="w-full bg-green-500 text-white py-2 rounded"
+        >
+          Register
+        </button>
       </div>
     </div>
   );

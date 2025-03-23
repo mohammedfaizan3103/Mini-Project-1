@@ -113,7 +113,7 @@ router.get("/session", (req, res) => {
     if (req.session.user) {
         res.status(200).json({ user: req.session.user });
     } else {
-        res.status(405).json({ message: "No active session" });
+        res.status(200).json({ message: "No active session" });
     }
 });
 

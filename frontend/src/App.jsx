@@ -34,7 +34,10 @@ function App() {
             navigate("/dashboard");
           }
         } else {
-          navigate("/login");
+          console.log("No active session found");
+          if (location.pathname !== '/login' && location.pathname !== "/register") { // Redirect to login if not on login/register
+            navigate("/login");
+          }
         }
       } catch (error) {
         console.error("Session check failed:", error);
