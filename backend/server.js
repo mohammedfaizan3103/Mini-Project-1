@@ -1,36 +1,37 @@
-require("dotenv").config();
 const express = require("express");
+const dotenv = require("dotenv").config();
 const cors = require("cors");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const insightsRoutes = require("./routes/insights");
+
+// Import routes
+const authRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const timetableRoutes = require("./routes/timetableRoutes");
+const insightsRoutes = require("./routes/insights");  // ✅ Make sure you are importing correctly
+const testRoutes = require("./routes/testRoute");
 
 const app = express();
+
+// ✅ Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 connectDB();
 
 // ✅ CORS configuration
-// ✅ Add 'Access-Control-Allow-Credentials' and 'Access-Control-Allow-Headers'
 app.use(
   cors({
-    origin: "http://localhost:5173",     // Your frontend URL
-    credentials: true,                   // Allow credentials
+    origin: "http://localhost:5173",  
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
-
-app.use(cookieParser()); // ✅ Parse cookies properly
-app.use(express.json());
-// Middleware to add CORS credentials header
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
-
-// ✅ Correct session middleware setup (remove duplicate)
+// ✅ Correct session middleware setup
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "fallback_secret",
@@ -38,17 +39,19 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,      
-      sameSite: "lax",                // Use true in production with HTTPS
-      maxAge: 1000 * 60 * 60             // 1-hour session
+      secure: false,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60,  
     }
   })
 );
 
 // ✅ Use the correct route prefixes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/tasks", require("./routes/taskRoutes"));
-app.use("/api/timetable", require("./routes/timetableRoutes"));
-app.use("/api/insights", insightsRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/timetable", timetableRoutes);
+app.use("/api/insights", insightsRoutes);   // ✅ Ensure you are using the correct path
+app.use("/api/testing", testRoutes);
 
-app.listen(5000, () => console.log("🚀 Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

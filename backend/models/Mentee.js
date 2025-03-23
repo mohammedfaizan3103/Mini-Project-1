@@ -28,7 +28,14 @@ const MenteeSchema = new Schema({
     tasks: [{
         type: Schema.Types.ObjectId,
         ref: 'Task'
-    }]
+    }],
+    previous_insights: {
+        qualitative_trends: [String],
+        pattern_detection: [String],
+        improvement_areas: [String],
+        missed_tasks_text: String
+    },
+    mentor_feedback: String
 });
 
 module.exports = mongoose.model('Mentee', MenteeSchema);
