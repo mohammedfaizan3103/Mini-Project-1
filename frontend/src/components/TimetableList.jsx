@@ -1,16 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const TimetableList = ({ timetables, onSelect, onDelete }) => {
+  const [selectedId, setSelectedId] = useState('');
+
   const handleSelect = (e) => {
-    const selectedId = e.target.value;
-    const selectedTimetable = timetables.find(t => t._id === selectedId);
+    const id = e.target.value;
+    setSelectedId(id);
+    const selectedTimetable = timetables.find(t => t._id === id);
     onSelect(selectedTimetable || null);
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      onDelete(selectedId);
+      setSelectedId(''); // Reset the selection after deletion
+    }
   };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-8">
       <h2 className="text-2xl font-semibold mb-4">Your Timetables</h2>
       <select
+        value={selectedId}
         onChange={handleSelect}
         className="w-full p-2 border border-gray-300 rounded-lg mb-4"
       >
@@ -21,9 +32,9 @@ const TimetableList = ({ timetables, onSelect, onDelete }) => {
           </option>
         ))}
       </select>
-      {timetables.length > 0 && (
+      {selectedId && (
         <button
-          onClick={() => onDelete(timetables.find(t => t._id === document.querySelector('select').value)?._id)}
+          onClick={handleDelete}
           className="w-full bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
         >
           Delete Selected Timetable
