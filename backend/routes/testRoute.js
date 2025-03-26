@@ -106,48 +106,49 @@ ${JSON.stringify(taskData.tasks, null, 2)}
 ### **Instructions:**
 
 1. **Generate Qualitative Insights:**
-   - Compare this week’s performance with previous insights.
+   - Briefly compare this week’s performance with previous insights.
    - Identify **new trends** or changes from last week.
    - **Analyze the task names** and detect patterns:
-     - Are certain types of tasks frequently delayed or completed late?
      - Highlight recurring inefficiencies.
    - Include practical and specific **improvement suggestions**.
+   - Keep the insights **concise and plain text**, without any formatting symbols.
 
 2. **Pattern Detection:**
    - Identify recurring issues based on the task content.
    - Mention specific patterns or themes (e.g., reports, approvals) that are frequently delayed.
    - Detect if certain categories (urgent, important) consistently face delays.
+   - Ensure the output uses **short and clear sentences**.
 
 3. **Improvement Areas:**
    - Suggest **specific and actionable improvements**.
    - If mentor feedback is available, reference it when suggesting areas for improvement.
+   - Keep the suggestions brief and plain text.
 
 4. **Missed Tasks Summary:**
    - Generate a **short, readable summary** of missed tasks.
    - Mention common task types or patterns in the summary.
+   - Avoid using formatting symbols in the output.
 
 ---
 
 ### **Response Format:**
-\`\`\`json
 {
     "insights": {
         "qualitative_trends": [
-            "<Trend 1>",
-            "<Trend 2>"
+            "Short and clear trend 1",
+            "Short and clear trend 2"
         ],
         "pattern_detection": [
-            "<Recurring issue 1>",
-            "<Recurring issue 2>"
+            "Short recurring issue 1",
+            "Short recurring issue 2"
         ],
         "improvement_areas": [
-            "<Specific improvement 1>",
-            "<Specific improvement 2>"
+            "Brief improvement 1",
+            "Brief improvement 2"
         ],
-        "missed_tasks_text": "<Short, readable summary of missed tasks>"
+        "missed_tasks_text": "Concise summary of missed tasks"
     }
 }
-\`\`\`
 `;
 
     try {
