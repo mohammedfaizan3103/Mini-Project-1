@@ -52,7 +52,6 @@ router.post("/login", async (req, res) => {
     const { username, password, role } = req.body;
 
     try {
-        // Select the correct model based on role
         const model = role === "mentor" ? Mentor : Mentee;
         const user = await model.findOne({ username });
 
@@ -65,14 +64,31 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // Store user info in session
+        // Enhanced session data
         req.session.user = {
-            id: user._id,
+            _id: user._id, // Changed from 'id' to '_id' for consistency
+            username: user.username,
             email: user.email,
-            role: role
+            role: role,
+            mentor: user.mentor // For mentees
         };
 
-        res.status(200).json({ message: "Login successful", user: req.session.user });
+        // Explicitly save session
+        req.session.save(err => {
+            if (err) {
+                console.error("Session save error:", err);
+                return res.status(500).json({ message: "Login failed" });
+            }
+            res.status(200).json({ 
+                message: "Login successful", 
+                user: {
+                    _id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    role: role
+                }
+            });
+        });
 
     } catch (error) { 
         console.error("Login error:", error);

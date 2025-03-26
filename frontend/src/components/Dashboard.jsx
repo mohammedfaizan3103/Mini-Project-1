@@ -1,3 +1,4 @@
+// Dashboard.js (frontend)
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +29,7 @@ const Dashboard = ({ user }) => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:5000/api/tasks?userId=${user._id}`, {
+        const response = await axios.get("http://localhost:5000/api/tasks", {
           withCredentials: true
         });
         setTasks(response.data);
@@ -46,17 +47,17 @@ const Dashboard = ({ user }) => {
   const addTask = async () => {
     if (taskText.trim() === "") return;
 
-    const newTask = {
-      title: taskText,
-      category,
-      completed: false,
-      userId: user._id
-    };
-
     try {
-      const response = await axios.post("http://localhost:5000/api/tasks", newTask, {
-        withCredentials: true
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/tasks",
+        { 
+          title: taskText,
+          category 
+        },
+        { 
+          withCredentials: true 
+        }
+      );
 
       setTasks((prev) => [...prev, response.data]);
       setTaskText("");
@@ -66,13 +67,19 @@ const Dashboard = ({ user }) => {
     }
   };
 
-  const toggleTaskCompletion = async (taskId, completed) => {
+  const toggleTaskCompletion = async (taskId, currentlyCompleted) => {
     try {
-      await axios.put(`http://localhost:5000/api/tasks/${taskId}`, { completed }, { withCredentials: true });
+      const response = await axios.put(
+        `http://localhost:5000/api/tasks/${taskId}/toggle`,
+        {},
+        { 
+          withCredentials: true 
+        }
+      );
 
       setTasks((prev) =>
         prev.map((task) =>
-          task._id === taskId ? { ...task, completed } : task
+          task._id === taskId ? response.data : task
         )
       );
     } catch (error) {
@@ -83,9 +90,12 @@ const Dashboard = ({ user }) => {
 
   const deleteTask = async (taskId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, {
-        withCredentials: true
-      });
+      await axios.delete(
+        `http://localhost:5000/api/tasks/${taskId}`,
+        { 
+          withCredentials: true 
+        }
+      );
 
       setTasks((prev) => prev.filter((task) => task._id !== taskId));
     } catch (error) {
@@ -106,6 +116,7 @@ const Dashboard = ({ user }) => {
           placeholder="Enter Task..."
           value={taskText}
           onChange={(e) => setTaskText(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && addTask()}
         />
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           {categories.map((cat) => (
@@ -131,23 +142,29 @@ const Dashboard = ({ user }) => {
             {tasks
               .filter((task) => task.category === cat && (showCompleted || !task.completed))
               .map((task) => (
-                <div key={task._id} className="flex items-center">
+                <div key={task._id} className="flex items-center gap-2 my-1">
                   <input
                     type="checkbox"
                     checked={task.completed}
-                    onChange={() => toggleTaskCompletion(task._id, !task.completed)}
+                    onChange={() => toggleTaskCompletion(task._id, task.completed)}
+                    className="mr-2"
                   />
-                  <div className={task.completed ? "line-through text-gray-500 task" : "task"}>
+                  <div className={`flex-grow ${task.completed ? "line-through text-gray-500" : ""}`}>
                     {task.title}
                   </div>
-                  <button onClick={() => deleteTask(task._id)}>🗑️</button>
+                  <button 
+                    onClick={() => deleteTask(task._id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    🗑️
+                  </button>
                 </div>
               ))}
           </div>
         ))}
       </div>
 
-      {error && <div className="error">{error}</div>}
+      {error && <div className="error mt-4 p-2 bg-red-100 text-red-700 rounded">{error}</div>}
     </div>
   );
 };

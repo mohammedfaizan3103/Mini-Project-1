@@ -3,17 +3,20 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:5000/api/auth/logout", { withCredentials: true });
+      await axios.get("http://localhost:5000/api/auth/logout", { 
+        withCredentials: true 
+      });
 
-      // ✅ Clear session storage and user data
+      // Clear user state and local data
+      setUser(null);
       sessionStorage.clear();
 
-      // ✅ Slight delay to prevent session conflicts
+      // Redirect to login after slight delay
       setTimeout(() => {
         navigate("/login");
       }, 300);
@@ -22,14 +25,30 @@ const Navbar = () => {
     }
   };
 
+  const handleLoginRedirect = () => {
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="#">Tasks</a></li>
-        <li><a href="timetable">Timetable</a></li>
+        <li><a href="/dashboard">Tasks</a></li>
+        <li><a href="/timetable">Timetable</a></li>
         <li><a href="#">Profile</a></li>
-        <li><button onClick={handleLogout}>Logout</button></li>
+        {user ? (
+          <li>
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
+            </button>
+          </li>
+        ) : (
+          <li>
+            <button onClick={handleLoginRedirect} className="login-btn">
+              Login
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   );

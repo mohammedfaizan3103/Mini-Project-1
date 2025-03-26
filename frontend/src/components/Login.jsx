@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Login() {
+export default function Login({ setUser }) {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -10,6 +10,7 @@ export default function Login() {
   });
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,7 +20,8 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Clear any previous errors
+    setError(null);
+    setLoading(true);
 
     try {
       const response = await axios.post(
@@ -28,26 +30,37 @@ export default function Login() {
         { withCredentials: true }
       );
 
-      if (response.status === 200) {
-        // Store user info in session storage
-        sessionStorage.setItem("userId", response.data.userId);
-        sessionStorage.setItem("username", response.data.username);
-        sessionStorage.setItem("role", response.data.role);
-        
+      if (response.data.message === "Login successful") {
+        // Update the user state in the parent component
+        setUser({
+          _id: response.data.user._id,
+          username: response.data.user.username,
+          email: response.data.user.email,
+          role: formData.role
+        });
+
+        // Store minimal data in sessionStorage
+        sessionStorage.setItem("authUser", JSON.stringify({
+          _id: response.data.user._id,
+          username: response.data.user.username,
+          role: formData.role
+        }));
+
         // Redirect to dashboard
         navigate("/dashboard");
       } else {
-        console.log("Login failed:", response.data.message);
-        setError("Invalid credentials. Please try again.");
+        setError(response.data.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      setError("Login failed. Please check your credentials.");
+      console.error("Login error:", error);
+      setError(error.response?.data?.message || "Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleRegisterClick = () => {
-    navigate("/register"); // Redirect to the registration page
+    navigate("/register");
   };
 
   return (
@@ -55,55 +68,74 @@ export default function Login() {
       <div className="p-6 bg-white shadow-md rounded-md w-96">
         <h2 className="text-2xl font-semibold mb-4">Login</h2>
 
-        {error && <div className="text-red-500 mb-4">{error}</div>}
+        {error && (
+          <div className="p-2 mb-4 text-red-500 bg-red-100 rounded-md">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           {/* Username */}
-          <label className="block mb-2">Username</label>
-          <input
-            type="text"
-            name="username"
-            className="w-full p-2 border rounded mb-4"
-            onChange={handleChange}
-            required
-          />
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium">Username</label>
+            <input
+              type="text"
+              name="username"
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={handleChange}
+              required
+              autoFocus
+            />
+          </div>
 
           {/* Password */}
-          <label className="block mb-2">Password</label>
-          <input
-            type="password"
-            name="password"
-            className="w-full p-2 border rounded mb-4"
-            onChange={handleChange}
-            required
-          />
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium">Password</label>
+            <input
+              type="password"
+              name="password"
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
           {/* Role Dropdown */}
-          <label className="block mb-2">Role</label>
-          <select
-            name="role"
-            className="w-full p-2 border rounded mb-4"
-            onChange={handleChange}
-            value={formData.role}
-            required
-          >
-            <option value="mentee">Mentee</option>
-            <option value="mentor">Mentor</option>
-          </select>
+          <div className="mb-6">
+            <label className="block mb-2 text-sm font-medium">Role</label>
+            <select
+              name="role"
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={handleChange}
+              value={formData.role}
+              required
+            >
+              <option value="mentee">Mentee</option>
+              <option value="mentor">Mentor</option>
+            </select>
+          </div>
 
           {/* Submit Button */}
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded mb-4">
-            Login
+          <button
+            type="submit"
+            className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        {/* Register Button */}
-        <button
-          onClick={handleRegisterClick}
-          className="w-full bg-green-500 text-white py-2 rounded"
-        >
-          Register
-        </button>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{" "}
+            <button
+              onClick={handleRegisterClick}
+              className="font-medium text-green-600 hover:text-green-500 focus:outline-none"
+            >
+              Register here
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
