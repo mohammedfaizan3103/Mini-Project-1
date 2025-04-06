@@ -35,7 +35,7 @@ const Navbar = ({ user, setUser }) => {
         <li><a href="/">Home</a></li>
         <li><a href="/dashboard">Tasks</a></li>
         <li><a href="/timetable">Timetable</a></li>
-        <li><a href="#">Profile</a></li>
+        <li><a href="/profile">Profile</a></li>
         {user ? (
           <li>
             <button onClick={handleLogout} className="logout-btn">

@@ -35,8 +35,9 @@ router.get("/insights", async (req, res) => {
         if (!mentee) {
             return res.status(404).json({ error: "Mentee not found" });
         }
-
-        const taskData = generateTaskDataJson(mentee, mentee.tasks);
+        const tempTasks = [...mentee.tasks];
+        tempTasks.reverse();
+        const taskData = generateTaskDataJson(mentee, tempTasks.slice(0, 5));
         const insights = await generateInsights(taskData, username);
 
         res.json(insights);
@@ -152,12 +153,17 @@ ${JSON.stringify(taskData.tasks, null, 2)}
 `;
 
     try {
+        const temperature = 0.7 + (Math.random() * 0.3); // Random between 0.7-1.0
+
         const response = await axios.post(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
             {
-                "contents": [{ "role": "user", "parts": [{ "text": prompt }] }]
-            },
-            { headers: { 'Content-Type': 'application/json' } }
+                "contents": [{ "role": "user", "parts": [{ "text": prompt }] }],
+                "generationConfig": {
+                    "temperature": temperature,
+                    "topP": 0.9
+                }
+            }
         );
 
         if (response.data && response.data.candidates) {
