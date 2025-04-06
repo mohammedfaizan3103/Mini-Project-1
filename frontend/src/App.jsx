@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Register from './components/Register';
 import Timetable from './components/Timetable';
+import Profile from './components/Profile';
 
 const AppWrapper = () => {
   return (
@@ -80,6 +81,7 @@ function App() {
           <Route path="/register" element={<Register setUser={setUser} />} />
           <Route path="/timetable" element={<Timetable user={user} />} />
           <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route path="/profile" element={<Profile user={user} />} />
         </Routes>
       </main>
     </div>

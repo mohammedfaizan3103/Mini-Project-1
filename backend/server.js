@@ -49,6 +49,7 @@ app.use("/api/tasks", require("./routes/taskRoutes")); // Now with proper auth
 app.use("/api/timetable", require("./routes/timetableRoutes"));
 app.use("/api/insights", require("./routes/insights"));
 app.use("/api/testing", require("./routes/testRoute"));
+app.use("/api/ai-insights", require("./routes/aiInsights"));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
