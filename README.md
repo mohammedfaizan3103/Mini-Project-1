@@ -1,78 +1,87 @@
-# Mini-Project-1
+# ChronoFlow: AI-Powered Productivity and Mentor-Mentee Management System
 
-## Overview
+## 🚀 Overview
 
-This project is a comprehensive task management and timetable application designed to enhance productivity and organization. Built with a React frontend and an Express backend, it allows users to register as mentors or mentees, manage their tasks efficiently, and generate insightful performance reviews using AI. The application supports a mentor-mentee relationship, enabling mentors to provide feedback and track the progress of their mentees.
+**ChronoFlow** is a full-stack AI-driven productivity platform designed to enhance task management, time organization, and mentorship interactions. Built with the **MERN stack** and powered by **Google's Gemini API**, the platform allows users to:
 
-## Features
+- Prioritize tasks intelligently,
+- Create structured timetables,
+- Receive AI-generated performance insights,
+- Facilitate mentor-mentee collaboration for continuous growth.
 
-- **User Registration and Login**: Secure user authentication with role-based access for mentors and mentees.
-- **Task Management**: Create, update, and delete tasks categorized by urgency and importance. Tasks can be marked as completed or pending.
-- **Timetable Management**: Manage daily schedules with a user-friendly interface to add, edit, and view timetables.
-- **AI-Generated Performance Insights**: Utilize AI to generate detailed performance reviews, highlighting trends, patterns, and areas for improvement based on task data.
-- **Mentor-Mentee Relationship Management**: Mentors can provide feedback, track mentee progress, and view AI-generated insights to guide mentees effectively.
-- **Responsive Design**: The application is designed to be responsive, ensuring a seamless experience across different devices.
+This project was developed as part of the Mini-Project-I (22ITC07) curriculum at **CBIT**.
 
-## Setup Instructions
+---
+
+## ✨ Core Features
+
+- 🔒 **User Authentication:** Secure login and registration with role-based access control (Mentor / Mentee).
+- ✅ **Task Management:** Create, categorize (via Eisenhower Matrix), edit, and track tasks.
+- 🗓️ **Timetable Planner:** Design personalized schedules with an intuitive timetable manager.
+- 🤖 **AI-Generated Insights:** Analyze user productivity trends and receive improvement suggestions via Generative AI.
+- 👥 **Mentor-Mentee Module:** Mentors can monitor mentee progress, provide feedback, and track development through AI reports.
+- 📱 **Responsive Design:** Fully optimized for both desktop and mobile devices.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React.js, Tailwind CSS, Vite
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (with Mongoose ORM)
+- **Authentication:** bcrypt, JWT
+- **AI Integration:** Google's Gemini API
+- **Dev Tools:** Postman, MongoDB Compass, VS Code, GitHub
+
+---
+
+## ⚙️ Setup Instructions
 
 ### Prerequisites
-
-- Node.js (v14 or higher)
-- MongoDB
+- Node.js (v14+)
+- MongoDB (local or Atlas)
 
 ### Backend Setup
-
-1. Navigate to the backend directory:
-   ```sh
-   cd backend
-   ```
-
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-
-3. Create a `.env` file with the following content:
-   ```plaintext
-   MONGO_URI=<your_mongodb_connection_string>
-   GEMINI_API_KEY=<your_google_generative_ai_api_key>
-   SESSION_SECRET=<your_session_secret>
-   ```
-
-4. Start the backend server:
-   ```sh
-   npm run dev
-   ```
+```bash
+cd backend
+npm install
+```
+Create a `.env` file inside the backend folder:
+```plaintext
+MONGO_URI=<your_mongodb_connection_string>
+GEMINI_API_KEY=<your_google_generative_ai_api_key>
+SESSION_SECRET=<your_session_secret>
+```
+Start the backend server:
+```bash
+npm run dev
+```
 
 ### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-1. Navigate to the frontend directory:
-   ```sh
-   cd frontend
-   ```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
+---
 
-3. Start the frontend development server:
-   ```sh
-   npm run dev
-   ```
+## 🧩 Usage Flow
 
-## Usage
+1. **Register** as a Mentor or Mentee.
+2. **Login** securely and access your dashboard.
+3. **Add and manage tasks** categorized by urgency and importance.
+4. **Plan your week** with the Timetable Manager.
+5. **Generate personalized AI insights** on task performance.
+6. **Mentors provide structured feedback** to mentees for continuous improvement.
 
-1. Open your browser and navigate to `http://localhost:5173`.
-2. Register as a mentor or mentee.
-3. Log in with your credentials.
-4. Manage your tasks and timetables.
-5. Generate performance insights.
+---
 
-## Sample Outputs for AI Generated Insights
+## 📊 Sample AI Interaction
 
-### Sample Task Data that will be calculated and provided to AI
-
+### Sample Task Data Sent to Gemini API
 ```json
 {
   "tasks_completed": 5,
@@ -111,7 +120,6 @@ This project is a comprehensive task management and timetable application design
 ```
 
 ### Sample AI-Generated Insights
-
 ```json
 {
   "insights": {
@@ -131,4 +139,23 @@ This project is a comprehensive task management and timetable application design
   }
 }
 ```
+
+---
+
+## 📚 Learnings and Achievements
+
+- Gained **full-stack development** expertise (MERN stack).
+- Hands-on experience with **Generative AI integration** and **prompt engineering**.
+- Implemented secure, real-world **authentication** and **role management**.
+- Built collaborative development workflows using **GitHub** and **version control best practices**.
+
+---
+
+## 📄 License
+
+This project is for educational purposes under CBIT’s Mini-Project-I guidelines.  
+For inquiries regarding code reuse or extension, please contact the developer.
+
+---
+
 
