@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 
     if (fetchNew === "false") {
         // Return the latest insights from DB if available
-        const latestInsight = mentee.previous_insights.length > 0 
+        const latestInsight = mentee.previous_insights?.length > 0 
           ? mentee.previous_insights[mentee.previous_insights.length - 1]
           : null;
         

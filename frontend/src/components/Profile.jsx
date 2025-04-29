@@ -4,10 +4,13 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import { useParams } from 'react-router-dom';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const Profile = ({ user }) => {
+  const { username_ } = useParams();
+  const [username, setUsername] = useState(username_);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [insights, setInsights] = useState({
@@ -31,15 +34,26 @@ const Profile = ({ user }) => {
   const [feedbackText, setFeedbackText] = useState('');
 
   useEffect(() => {
-    if (user?.username) {
+    // console.log(username_)
+    if (user?.role != 'mentor' && user?.username) {
+      console.log('here')
+      console.log(user)
+      setUsername(user.username);
       fetchInsights(user.username, false);
-      console.log(insights);
+      //console.log(insights);
+    }
+    if(user?.role == 'mentor') {
+      //console.log("here")
+      //console.log(username_)
+      setUsername(username_);
+      fetchInsights(username, false);
     }
   }, [user]);
 
   const fetchInsights = async (username, new_) => {
     setLoading(true);
     setError(null);
+    console.log(username)
     try {
       const response = await axios.get(`http://localhost:5000/api/ai-insights?username=${username}&new=${new_}`);
       // console.log("Full API response:", response.data);
@@ -78,18 +92,18 @@ const Profile = ({ user }) => {
   };
 
   const generateNewInsights = async () => {
-    fetchInsights(user.username, true);
+    fetchInsights(username, true);
   };
 
   const submitFeedback = async () => {
     if (!feedbackText.trim()) return;
     try {
       await axios.post('/api/ai-insights/feedback', {
-        username: user.username,
+        username: username,
         text: feedbackText
       });
       setFeedbackText('');
-      fetchInsights(user.username);
+      fetchInsights(username);
     } catch (error) {
       console.error('Error submitting feedback:', error);
       setError('Failed to submit feedback. Please try again.');

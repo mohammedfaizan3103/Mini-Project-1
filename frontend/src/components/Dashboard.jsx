@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import MentorDashboard from "./MentorDashboard";
+import Navbar from "./Navbar";
 
 const Dashboard = ({ user }) => {
   const [tasks, setTasks] = useState([]);
@@ -25,6 +27,7 @@ const Dashboard = ({ user }) => {
       navigate("/login");
       return;
     }
+    // console.log(user)
 
     const fetchTasks = async () => {
       setLoading(true);
@@ -40,8 +43,9 @@ const Dashboard = ({ user }) => {
         setLoading(false);
       }
     };
-
-    fetchTasks();
+    if (user.role !== "mentor") {
+      fetchTasks();
+    }
   }, [user, navigate]);
 
   const addTask = async () => {
@@ -105,7 +109,14 @@ const Dashboard = ({ user }) => {
   };
 
   if (loading) return <div>Loading...</div>;
-
+  if (user?.role == "mentor") {
+    return (
+      <>
+        {/* <Navbar /> */}
+        <MentorDashboard />
+      </>
+    )
+  }
   return (
     <div className="container_">
       <h2>Dashboard</h2>
