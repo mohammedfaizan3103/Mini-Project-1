@@ -1,8 +1,6 @@
-// Dashboard.js (frontend)
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../index.css";
 import MentorDashboard from "./MentorDashboard";
 import Navbar from "./Navbar";
 
@@ -27,7 +25,6 @@ const Dashboard = ({ user }) => {
       navigate("/login");
       return;
     }
-    // console.log(user)
 
     const fetchTasks = async () => {
       setLoading(true);
@@ -108,74 +105,106 @@ const Dashboard = ({ user }) => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (user?.role == "mentor") {
-    return (
-      <>
-        {/* <Navbar /> */}
-        <MentorDashboard />
-      </>
-    )
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+    </div>
+  );
+
+  if (user?.role === "mentor") {
+    return <MentorDashboard />;
   }
+
   return (
-    <div className="container_">
-      <h2>Dashboard</h2>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white shadow-lg rounded-lg p-6">
+          <h2 className="text-3xl font-bold text-center text-indigo-600 mb-8">Task Dashboard</h2>
 
-      <div className="task-input">
-        <input
-          type="text"
-          placeholder="Enter Task..."
-          value={taskText}
-          onChange={(e) => setTaskText(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && addTask()}
-        />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-        <button className="bg-gray-700 text-white" onClick={addTask}>Add Task</button>
+          <div className="space-y-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <input
+                type="text"
+                placeholder="Enter Task..."
+                value={taskText}
+                onChange={(e) => setTaskText(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addTask()}
+                className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <select 
+                value={category} 
+                onChange={(e) => setCategory(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <button 
+                onClick={addTask}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Add Task
+              </button>
+            </div>
 
-        <div className="flex gap-3 items-center">
-          <input
-            type="checkbox"
-            checked={showCompleted}
-            onChange={(e) => setShowCompleted(e.target.checked)}
-          />
-          <span>Show Completed</span>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="showCompleted"
+                checked={showCompleted}
+                onChange={(e) => setShowCompleted(e.target.checked)}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label htmlFor="showCompleted" className="ml-2 text-gray-700">
+                Show Completed Tasks
+              </label>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.map((cat) => (
+              <div key={cat} className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">
+                  {cat}
+                </h3>
+                <div className="space-y-2">
+                  {tasks
+                    .filter((task) => task.category === cat && (showCompleted || !task.completed))
+                    .map((task) => (
+                      <div key={task._id} className="flex items-center p-2 hover:bg-gray-100 rounded">
+                        <input
+                          type="checkbox"
+                          checked={task.completed}
+                          onChange={() => toggleTaskCompletion(task._id, task.completed)}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <span className={`ml-3 flex-grow ${task.completed ? "line-through text-gray-400" : "text-gray-700"}`}>
+                          {task.title}
+                        </span>
+                        <button 
+                          onClick={() => deleteTask(task._id)}
+                          className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition duration-200"
+                          aria-label="Delete task"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {error && (
+            <div className="mt-6 p-3 bg-red-50 text-red-700 rounded-md border border-red-200">
+              {error}
+            </div>
+          )}
         </div>
       </div>
-
-      <div className="task-list">
-        {categories.map((cat) => (
-          <div key={cat} className="task-category">
-            <h3>{cat}</h3>
-            {tasks
-              .filter((task) => task.category === cat && (showCompleted || !task.completed))
-              .map((task) => (
-                <div key={task._id} className="flex items-center gap-2 my-1">
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                    className="mr-2"
-                  />
-                  <div className={`flex-grow ${task.completed ? "line-through text-gray-500" : ""}`}>
-                    {task.title}
-                  </div>
-                  <button 
-                    onClick={() => deleteTask(task._id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              ))}
-          </div>
-        ))}
-      </div>
-
-      {error && <div className="error mt-4 p-2 bg-red-100 text-red-700 rounded">{error}</div>}
     </div>
   );
 };

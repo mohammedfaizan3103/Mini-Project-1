@@ -97,7 +97,7 @@ const Timetable = ({ user }) => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Timetable Manager</h1>
+      <h1 className="text-3xl font-bold text-center text-indigo-600 mb-8">Timetable Manager</h1>
       <div className="max-w-4xl mx-auto">
         <TimetableForm
           selectedTimetable={selectedTimetable}

@@ -7,6 +7,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Timetable from './components/Timetable';
 import Profile from './components/Profile';
+import HomePage from './components/HomePage';
 
 const AppWrapper = () => {
   return (
@@ -30,7 +31,7 @@ function App() {
         if (sessionUser) {
           setUser(JSON.parse(sessionUser));
           if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register') {
-            navigate('/dashboard');
+            navigate('/');
           }
           setLoading(false);
           return;
@@ -48,7 +49,7 @@ function App() {
             navigate('/dashboard');
           }
         } else {
-          if (location.pathname !== '/login' && location.pathname !== '/register') {
+          if (location.pathname !== "/" && location.pathname !== '/login' && location.pathname !== '/register') {
             navigate('/login');
           }
         }
@@ -72,11 +73,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Navbar user={user} setUser={setUser} />
       <main className="container mx-auto px-4 py-8">
         <Routes>
-          <Route path="/" element={<Dashboard user={user} />} />
+          <Route path="/" element={<HomePage user={user}/>} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register setUser={setUser} />} />
           <Route path="/timetable" element={<Timetable user={user} />} />

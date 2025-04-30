@@ -42,7 +42,7 @@ const Profile = ({ user }) => {
       fetchInsights(user.username, false);
       //console.log(insights);
     }
-    if(user?.role == 'mentor') {
+    if (user?.role == 'mentor') {
       //console.log("here")
       //console.log(username_)
       setUsername(username_);
@@ -56,11 +56,11 @@ const Profile = ({ user }) => {
     console.log(username)
     try {
       const response = await axios.get(`http://localhost:5000/api/ai-insights?username=${username}&new=${new_}`);
-      // console.log("Full API response:", response.data);
-      
+      console.log("Full API response:", response.data);
+
       // Get the actual insights object (note the nested 'insights' property)
       const insightsData = response.data.insights?.insights || {};
-      
+
       // Update insights state
       setInsights({
         qualitative_trends: insightsData.qualitative_trends || [],
@@ -68,7 +68,7 @@ const Profile = ({ user }) => {
         improvement_areas: insightsData.improvement_areas || [],
         missed_tasks_text: insightsData.missed_tasks_text || ''
       });
-      
+
       // Update taskData
       const taskData = response.data.taskData || {};
       setTaskData({
@@ -82,7 +82,7 @@ const Profile = ({ user }) => {
         },
         mentor_feedback: taskData.mentor_feedback || []
       });
-  
+
     } catch (error) {
       console.error('Error fetching insights:', error);
       setError('Failed to load insights. Please try again.');
@@ -133,10 +133,22 @@ const Profile = ({ user }) => {
   ];
 
   const urgencyData = [
-    { name: 'Urgent & Important', value: taskData.tasks.filter(t => t.category === 'Urgent & Important').length },
-    { name: 'Urgent & Not Important', value: taskData.tasks.filter(t => t.category === 'Urgent & Not Important').length },
-    { name: 'Not Urgent & Important', value: taskData.tasks.filter(t => t.category === 'Not Urgent & Important').length },
-    { name: 'Not Urgent & Not Important', value: taskData.tasks.filter(t => t.category === 'Not Urgent & Not Important').length }
+    {
+      name: 'Urgent & Important',
+      value: taskData.tasks.filter(t => t.category === 'urgent_important').length
+    },
+    {
+      name: 'Urgent & Not Important',
+      value: taskData.tasks.filter(t => t.category === 'urgent_notimportant').length
+    },
+    {
+      name: 'Not Urgent & Important',
+      value: taskData.tasks.filter(t => t.category === 'noturgent_important').length
+    },
+    {
+      name: 'Not Urgent & Not Important',
+      value: taskData.tasks.filter(t => t.category === 'noturgent_notimportant').length
+    }
   ];
 
   const weeklyComparisonData = [
@@ -148,8 +160,8 @@ const Profile = ({ user }) => {
     <div className="container mx-auto px-4 py-8">
       <header className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
         <h1 className="text-2xl font-bold text-gray-800">Productivity Insights</h1>
-        <button 
-          onClick={generateNewInsights} 
+        <button
+          onClick={generateNewInsights}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors"
           disabled={loading}
         >
@@ -186,8 +198,8 @@ const Profile = ({ user }) => {
                 <h3 className="text-gray-500 text-sm font-medium">Tasks Completed</h3>
                 <p className="text-2xl font-bold text-gray-800 my-2">{taskData.tasks_completed} / {taskData.tasks.length}</p>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full" 
+                  <div
+                    className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full"
                     style={{ width: `${(taskData.tasks_completed / taskData.tasks.length) * 100}%` }}
                   ></div>
                 </div>
@@ -245,16 +257,33 @@ const Profile = ({ user }) => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        outerRadius={80}
+                        outerRadius={70} // Reduced to make space for legend
                         fill="#8884d8"
                         dataKey="value"
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        
                       >
                         {urgencyData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip
+                        formatter={(value, name, props) => [`${value} tasks`, name]}
+                      />
+                      <Legend
+                        layout="vertical"
+                        verticalAlign="middle"
+                        align="right"
+                        wrapperStyle={{
+                          paddingLeft: '20px',
+                          width: '200px', // Adjust the width to your available space
+                        }}
+                        formatter={(value) => (
+                          <span className="text-sm" style={{ wordWrap: 'break-word' }}>
+                            {value}
+                          </span>
+                        )}
+                      />
+
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -338,7 +367,7 @@ const Profile = ({ user }) => {
                 placeholder="Enter your feedback here..."
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none min-h-[120px]"
               />
-              <button 
+              <button
                 onClick={submitFeedback}
                 className="mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium transition-colors"
               >
