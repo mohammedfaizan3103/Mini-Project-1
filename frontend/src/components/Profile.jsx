@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const Profile = ({ user }) => {
+  console.log(user?.role)
   const { username_ } = useParams();
   const [username, setUsername] = useState(username_);
   const [loading, setLoading] = useState(false);
@@ -98,9 +99,12 @@ const Profile = ({ user }) => {
   const submitFeedback = async () => {
     if (!feedbackText.trim()) return;
     try {
-      await axios.post('/api/ai-insights/feedback', {
+      console.log("here")
+      await axios.post('http://localhost:5000/api/ai-insights/feedback', {
         username: username,
         text: feedbackText
+      }, {
+        withCredentials: true // Include if you need cookies/session
       });
       setFeedbackText('');
       fetchInsights(username);
@@ -290,7 +294,7 @@ const Profile = ({ user }) => {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            {/* <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
               <h3 className="text-lg font-medium text-gray-800 mb-4">Weekly Performance Comparison</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -305,7 +309,7 @@ const Profile = ({ user }) => {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -368,8 +372,9 @@ const Profile = ({ user }) => {
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none min-h-[120px]"
               />
               <button
+                disabled={user.role === "mentee"} 
                 onClick={submitFeedback}
-                className="mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                className={`${(user.role == "mentee") ? "disabled:opacity-50 disabled:cursor-not-allowed": ""} mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium transition-colors`}
               >
                 Submit Feedback
               </button>

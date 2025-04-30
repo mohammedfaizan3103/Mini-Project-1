@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
           console.error("Error parsing insights JSON:", e);
           insightsData = null;
         }
-        console.log(insightsData);
+        // console.log(insightsData);
         return res.json({
           insights: insightsData ? insightsData : null,  // Match the structure of new insights
           taskData: taskData
@@ -46,8 +46,8 @@ router.get("/", async (req, res) => {
       // Make new request to the testing endpoint with just the username
       const response = await axios.get(`http://localhost:5000/api/testing/insights?username=${username}`);
       // Return both the insights and the task data
-      console.log("data")
-      console.log(response.data);
+      // console.log("data")
+      // console.log(response.data);
       res.json({
         insights: response.data,
         taskData: taskData
@@ -122,7 +122,7 @@ const generateTaskDataJson = (mentee, tasks) => {
 router.post("/feedback", async (req, res) => {
   try {
     const { username, text } = req.body;
-    
+    console.log("aiusdfsakdjfasdkjf")
     if (!username || !text) {
       return res.status(400).json({ error: "Username and text are required" });
     }
