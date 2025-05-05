@@ -12,7 +12,7 @@ const MentorDashboard = () => {
         const response = await axios.get("http://localhost:5000/api/mentor/get-mentees", {
           withCredentials: true
         })
-        console.log(response.data)
+        // console.log(response.data)
         setMentees(response.data)
       } catch (error) {
         console.error("Failed to fetch mentees:", error)

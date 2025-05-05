@@ -40,8 +40,8 @@ const Navbar = ({ user, setUser }) => {
           
           <div className="hidden md:flex items-center space-x-8">
             <a href="/" className="text-white hover:text-indigo-200 transition duration-300">Home</a>
-            <a href="/dashboard" className="text-white hover:text-indigo-200 transition duration-300">Tasks</a>
-            <a href="/timetable" className="text-white hover:text-indigo-200 transition duration-300">Timetable</a>
+            <a href="/dashboard" className="text-white hover:text-indigo-200 transition duration-300">{(user?.role == 'mentor') ? 'Your Mentees' : 'Tasks '}</a>
+            <a href="/timetable" className={(user?.role == 'mentee')?"text-white hover:text-indigo-200 transition duration-300" : 'hidden'}>Timetable</a>
             <a href="/profile" className="text-white hover:text-indigo-200 transition duration-300">Profile</a>
             
             {user ? (

@@ -9,9 +9,13 @@ router.get("/", requireAuth, async (req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
-    const mentee = await Mentee.findById(req.session.user._id).populate('tasks');
-    
+    let mentee;
+    if(req.session.user.role == 'mentor'){
+      username = req.query.userId;
+      mentee = await Mentee.findOne({ username }).populate('tasks');
+    } else {
+      mentee = await Mentee.findById(req.session.user._id).populate('tasks');
+    }
     if (!mentee) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -38,7 +42,7 @@ router.get("/", requireAuth, async (req, res) => {
 // Add new task
 router.post("/", requireAuth, async (req, res) => {
   try {
-    const { title, category } = req.body;
+    const { userId, title, category } = req.body;
     
     if (!title || !category) {
       return res.status(400).json({ error: 'Title and category are required' });
@@ -54,10 +58,17 @@ router.post("/", requireAuth, async (req, res) => {
     await newTask.save();
     
     // Add task reference to mentee
-    await Mentee.findByIdAndUpdate(req.session.user._id, {
-      $push: { tasks: newTask._id }
-    });
 
+    if(req.session.user.role == 'mentor'){
+      await Mentee.findOneAndUpdate(
+        { username: userId },
+        { $push: { tasks: newTask._id } }
+      );
+    } else {
+      await Mentee.findByIdAndUpdate(req.session.user._id, {
+        $push: { tasks: newTask._id }
+      });
+    }
     res.status(201).json(newTask);
   } catch (error) {
     console.error("Error adding task:", error);

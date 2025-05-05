@@ -122,7 +122,6 @@ const generateTaskDataJson = (mentee, tasks) => {
 router.post("/feedback", async (req, res) => {
   try {
     const { username, text } = req.body;
-    console.log("aiusdfsakdjfasdkjf")
     if (!username || !text) {
       return res.status(400).json({ error: "Username and text are required" });
     }

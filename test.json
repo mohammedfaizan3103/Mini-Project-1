@@ -1,17 +1,17 @@
 {
-    "insights": {
-      "qualitative_trends": [
-        "Frequent delays in urgent tasks",
-        "Consistent completion of non-urgent tasks"
-      ],
-      "pattern_detection": [
-        "Urgent administrative tasks are often delayed",
-        "Reporting tasks are frequently late"
-      ],
-      "improvement_areas": [
-        "Better time blocking for urgent tasks",
-        "More efficient delegation of low-priority tasks"
-      ],
-      "missed_tasks_text": "Last week, urgent admin tasks were frequently delayed, indicating a need for improved prioritization."
-    }
+  "insights": {
+    "qualitative_trends": [
+      "Frequent delays in urgent tasks",
+      "Consistent completion of non-urgent tasks"
+    ],
+    "pattern_detection": [
+      "Urgent administrative tasks are often delayed",
+      "Reporting tasks are frequently late"
+    ],
+    "improvement_areas": [
+      "Better time blocking for urgent tasks",
+      "More efficient delegation of low-priority tasks"
+    ],
+    "missed_tasks_text": "Last week, urgent admin tasks were frequently delayed, indicating a need for improved prioritization."
   }
+}

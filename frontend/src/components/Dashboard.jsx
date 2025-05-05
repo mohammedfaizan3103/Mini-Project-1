@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MentorDashboard from "./MentorDashboard";
 import Navbar from "./Navbar";
 
@@ -12,6 +12,7 @@ const Dashboard = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { username_ } = useParams();
 
   const categories = [
     "Urgent & Important",
@@ -25,14 +26,19 @@ const Dashboard = ({ user }) => {
       navigate("/login");
       return;
     }
+    if (username_ && user?.role !== "mentor") {
 
+    }
     const fetchTasks = async () => {
       setLoading(true);
+      console.log(user._id);
       try {
         const response = await axios.get("http://localhost:5000/api/tasks", {
+          params: { userId: username_ },
           withCredentials: true
         });
         setTasks(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Failed to fetch tasks:", error);
         setError("Failed to load tasks.");
@@ -40,9 +46,8 @@ const Dashboard = ({ user }) => {
         setLoading(false);
       }
     };
-    if (user.role !== "mentor") {
-      fetchTasks();
-    }
+
+    fetchTasks();
   }, [user, navigate]);
 
   const addTask = async () => {
@@ -51,12 +56,13 @@ const Dashboard = ({ user }) => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/tasks",
-        { 
+        {
+          userId: username_,
           title: taskText,
-          category 
+          category
         },
-        { 
-          withCredentials: true 
+        {
+          withCredentials: true
         }
       );
 
@@ -73,8 +79,8 @@ const Dashboard = ({ user }) => {
       const response = await axios.put(
         `http://localhost:5000/api/tasks/${taskId}/toggle`,
         {},
-        { 
-          withCredentials: true 
+        {
+          withCredentials: true
         }
       );
 
@@ -93,8 +99,8 @@ const Dashboard = ({ user }) => {
     try {
       await axios.delete(
         `http://localhost:5000/api/tasks/${taskId}`,
-        { 
-          withCredentials: true 
+        {
+          withCredentials: true
         }
       );
 
@@ -112,7 +118,9 @@ const Dashboard = ({ user }) => {
   );
 
   if (user?.role === "mentor") {
-    return <MentorDashboard />;
+    if (!username_) {
+      return <MentorDashboard />;
+    }
   }
 
   return (
@@ -131,8 +139,8 @@ const Dashboard = ({ user }) => {
                 onKeyPress={(e) => e.key === 'Enter' && addTask()}
                 className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              <select 
-                value={category} 
+              <select
+                value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
@@ -140,7 +148,7 @@ const Dashboard = ({ user }) => {
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-              <button 
+              <button
                 onClick={addTask}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
@@ -177,14 +185,18 @@ const Dashboard = ({ user }) => {
                           type="checkbox"
                           checked={task.completed}
                           onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                          disabled={user?.role === "mentor"}
+                          className={`h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded 
+    ${user?.role === "mentor" ? "opacity-50 cursor-not-allowed" : ""}`}
                         />
                         <span className={`ml-3 flex-grow ${task.completed ? "line-through text-gray-400" : "text-gray-700"}`}>
                           {task.title}
                         </span>
-                        <button 
+                        <button
                           onClick={() => deleteTask(task._id)}
-                          className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition duration-200"
+                          disabled={user?.role === "mentor"}
+                          className={`text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition duration-200
+                            ${user?.role === "mentor" ? "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-red-500" : ""}`}
                           aria-label="Delete task"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -5,11 +5,13 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const Profile = ({ user }) => {
-  console.log(user?.role)
+  const navigate = useNavigate();
+  const [isMentor, setIsMentor] = useState(false)
   const { username_ } = useParams();
   const [username, setUsername] = useState(username_);
   const [loading, setLoading] = useState(false);
@@ -37,8 +39,8 @@ const Profile = ({ user }) => {
   useEffect(() => {
     // console.log(username_)
     if (user?.role != 'mentor' && user?.username) {
-      console.log('here')
-      console.log(user)
+      // console.log('here')
+      // console.log(user)
       setUsername(user.username);
       fetchInsights(user.username, false);
       //console.log(insights);
@@ -46,18 +48,21 @@ const Profile = ({ user }) => {
     if (user?.role == 'mentor') {
       //console.log("here")
       //console.log(username_)
+      setIsMentor(true)
       setUsername(username_);
       fetchInsights(username, false);
     }
   }, [user]);
-
+  const goTasks = () => {
+    navigate(`/tasks/${username}`);
+  }
   const fetchInsights = async (username, new_) => {
     setLoading(true);
     setError(null);
-    console.log(username)
+    // console.log(username)
     try {
       const response = await axios.get(`http://localhost:5000/api/ai-insights?username=${username}&new=${new_}`);
-      console.log("Full API response:", response.data);
+      // console.log("Full API response:", response.data);
 
       // Get the actual insights object (note the nested 'insights' property)
       const insightsData = response.data.insights?.insights || {};
@@ -164,6 +169,14 @@ const Profile = ({ user }) => {
     <div className="container mx-auto px-4 py-8">
       <header className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
         <h1 className="text-2xl font-bold text-gray-800">Productivity Insights</h1>
+        <div className='flex space-x-4'>
+        <button
+          onClick={goTasks}
+          className={(isMentor) ? "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors" : 'hidden'}
+          disabled={loading}
+        >
+          View Tasks
+        </button>
         <button
           onClick={generateNewInsights}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors"
@@ -171,6 +184,8 @@ const Profile = ({ user }) => {
         >
           {loading ? 'Generating...' : 'Generate New Insights'}
         </button>
+        
+        </div>
       </header>
 
       <div className="bg-white rounded-lg shadow-md p-6">

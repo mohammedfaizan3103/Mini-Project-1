@@ -82,6 +82,7 @@ function App() {
           <Route path="/register" element={<Register setUser={setUser} />} />
           <Route path="/timetable" element={<Timetable user={user} />} />
           <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route path="/tasks/:username_" element={<Dashboard user={user} />} />
           <Route path="/profile" element={<Profile user={user} />} />
           <Route path="/profile/:username_" element={<Profile user={user} />} />
         </Routes>

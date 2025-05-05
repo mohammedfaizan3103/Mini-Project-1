@@ -7,8 +7,7 @@ const router = express.Router();
 // Generate and store AI insights
 router.post("/generate", async (req, res) => {
     const { userId, taskData } = req.body;
-    console.log("User ID:", userId);
-    console.log("Task Data:", taskData);
+    
     if (!userId || !taskData) {
         return res.status(400).json({ error: "User ID and task data required." });
     }
