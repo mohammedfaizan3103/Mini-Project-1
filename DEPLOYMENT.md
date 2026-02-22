@@ -128,7 +128,11 @@ pm2 start index.js
 pm2 startup
 pm2 save
 ```
+It will print a command like:
 
+sudo env PATH=...
+
+👉 COPY and RUN that command exactly
 ---
 
 ## 7️⃣ MongoDB (FREE & SAFE)
