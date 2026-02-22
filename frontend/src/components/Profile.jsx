@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { buildApiUrl } from '../config/api';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -61,7 +62,7 @@ const Profile = ({ user }) => {
     setError(null);
     // console.log(username)
     try {
-      const response = await axios.get(`http://localhost:5000/api/ai-insights?username=${username}&new=${new_}`);
+      const response = await axios.get(buildApiUrl(`api/ai-insights?username=${username}&new=${new_}`));
       // console.log("Full API response:", response.data);
 
       // Get the actual insights object (note the nested 'insights' property)
@@ -105,7 +106,7 @@ const Profile = ({ user }) => {
     if (!feedbackText.trim()) return;
     try {
       console.log("here")
-      await axios.post('http://localhost:5000/api/ai-insights/feedback', {
+      await axios.post(buildApiUrl('api/ai-insights/feedback'), {
         username: username,
         text: feedbackText
       }, {

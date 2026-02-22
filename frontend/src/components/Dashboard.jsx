@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { buildApiUrl } from "../config/api";
 import MentorDashboard from "./MentorDashboard";
 import Navbar from "./Navbar";
 
@@ -33,7 +34,7 @@ const Dashboard = ({ user }) => {
       setLoading(true);
       console.log(user._id);
       try {
-        const response = await axios.get("http://localhost:5000/api/tasks", {
+        const response = await axios.get(buildApiUrl("api/tasks"), {
           params: { userId: username_ },
           withCredentials: true
         });
@@ -55,7 +56,7 @@ const Dashboard = ({ user }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/tasks",
+        buildApiUrl("api/tasks"),
         {
           userId: username_,
           title: taskText,
@@ -77,7 +78,7 @@ const Dashboard = ({ user }) => {
   const toggleTaskCompletion = async (taskId, currentlyCompleted) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/tasks/${taskId}/toggle`,
+        buildApiUrl(`api/tasks/${taskId}/toggle`),
         {},
         {
           withCredentials: true
@@ -98,7 +99,7 @@ const Dashboard = ({ user }) => {
   const deleteTask = async (taskId) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        buildApiUrl(`api/tasks/${taskId}`),
         {
           withCredentials: true
         }

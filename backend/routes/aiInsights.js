@@ -44,7 +44,8 @@ router.get("/", async (req, res) => {
         });
       } else {
       // Make new request to the testing endpoint with just the username
-      const response = await axios.get(`http://localhost:5000/api/testing/insights?username=${username}`);
+      const apiBaseUrl = process.env.API_URL || 'http://localhost:5000';
+      const response = await axios.get(`${apiBaseUrl}/api/testing/insights?username=${username}`);
       // Return both the insights and the task data
       // console.log("data")
       // console.log(response.data);

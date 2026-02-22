@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { buildApiUrl } from '../config/api';
 import TimetableForm from './TimetableForm';
 import TimetableList from './TimetableList';
 import TimetableView from './TimetableView';
@@ -12,7 +13,7 @@ const Timetable = ({ user }) => {
   // Load timetables from backend
   const fetchTimetables = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/timetable', {
+      const response = await axios.get(buildApiUrl('api/timetable'), {
         withCredentials: true
       });
       // Convert backend format to match your frontend structure
@@ -36,7 +37,7 @@ const Timetable = ({ user }) => {
   const handleSaveTimetable = async (timetable) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/timetable',
+        buildApiUrl('api/timetable'),
         { 
           schedule: [...timetables, timetable],
           name: timetable.name // Include the name in the request
@@ -59,7 +60,7 @@ const Timetable = ({ user }) => {
       );
       
       const response = await axios.post(
-        'http://localhost:5000/api/timetable',
+        buildApiUrl('api/timetable'),
         { schedule: updatedTimetables },
         { withCredentials: true }
       );
@@ -78,7 +79,7 @@ const Timetable = ({ user }) => {
       const updatedTimetables = timetables.filter(t => t._id !== id);
       
       const response = await axios.post(
-        'http://localhost:5000/api/timetable',
+        buildApiUrl('api/timetable'),
         { schedule: updatedTimetables },
         { withCredentials: true }
       );

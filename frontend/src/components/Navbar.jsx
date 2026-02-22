@@ -1,13 +1,14 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { buildApiUrl } from "../config/api";
 
 const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:5000/api/auth/logout", { 
+      await axios.get(buildApiUrl("api/auth/logout"), { 
         withCredentials: true 
       });
 

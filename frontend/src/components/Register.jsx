@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { buildApiUrl } from "../config/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function Register() {
     
     setIsSubmitting(true);
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch(buildApiUrl("api/auth/register"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { buildApiUrl } from "../config/api";
 
 export default function Login({ setUser }) {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ export default function Login({ setUser }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        buildApiUrl("api/auth/login"),
         formData,
         { withCredentials: true }
       );

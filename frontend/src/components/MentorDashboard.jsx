@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import { buildApiUrl } from "../config/api";
 
 const MentorDashboard = () => {
   const [mentees, setMentees] = useState([])
@@ -9,7 +10,7 @@ const MentorDashboard = () => {
   useEffect(() => {
     const fetchMentees = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/mentor/get-mentees", {
+        const response = await axios.get(buildApiUrl("api/mentor/get-mentees"), {
           withCredentials: true
         })
         // console.log(response.data)
