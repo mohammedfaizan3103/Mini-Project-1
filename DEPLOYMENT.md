@@ -1,199 +1,196 @@
-🚀 Deploying a MERN App on AWS Free Tier
+# 🚀 Deploying a MERN App on AWS Free Tier
 
-Safe, Simple, Student-Friendly Guide
+## Safe, Simple, Student-Friendly Guide
 
-This guide explains the simplest and safest way to deploy a MERN application on AWS Free Tier without accidentally burning free credits 🔥.
+This guide explains the **simplest and safest way to deploy a MERN application on AWS Free Tier** without accidentally burning free credits 🔥.
 
-It uses one EC2 instance, Nginx, PM2, and MongoDB Atlas Free Tier, which is the most college-friendly and justification-friendly setup.
-
+It uses **one EC2 instance**, **Nginx**, **PM2**, and **MongoDB Atlas Free Tier**, which is the most **college-friendly and justification-friendly setup**.
 
 ---
 
-✅ Recommended Architecture (Why This Works)
+## ✅ Recommended Architecture (Why This Works)
 
-High-Level Architecture
+### High-Level Architecture
 
-Frontend (React + Vite)
-Built once and served as static files by Nginx
+* **Frontend (React + Vite)**
+  Built once and served as static files by **Nginx**
 
-Backend (Node.js + Express)
-Runs on EC2 using PM2
+* **Backend (Node.js + Express)**
+  Runs on EC2 using **PM2**
 
-Database
-MongoDB Atlas (M0 Free Tier)
+* **Database**
+  **MongoDB Atlas (M0 Free Tier)**
 
-Hosting
-AWS EC2 t3.micro (Free Tier)
-
+* **Hosting**
+  **AWS EC2 t3.micro (Free Tier)**
 
 This setup avoids hidden AWS costs and gives full control over deployment.
 
+---
+
+## 🆓 What Stays FREE
+
+| Service       | Free Tier Details                 |
+| ------------- | --------------------------------- |
+| EC2           | 750 hours/month (t3.micro, Linux) |
+| EBS           | Up to 30 GB                       |
+| MongoDB Atlas | M0 Free Cluster                   |
+| Data Transfer | Enough for demos & testing        |
+
+⚠️ **Avoid:** RDS, Elastic Beanstalk, Fargate, Load Balancers, CloudFront
 
 ---
 
-🆓 What Stays FREE
+## 1️⃣ Create AWS Account
 
-Service	Free Tier Details
+* Sign up on Amazon Web Services
+* Enable **Billing Alerts**
 
-EC2	750 hours/month (t3.micro, Linux)
-EBS	Up to 30 GB
-MongoDB Atlas	M0 Free Cluster
-Data Transfer	Enough for demos & testing
-
-
-⚠️ Avoid: RDS, Elastic Beanstalk, Fargate, Load Balancers, CloudFront
-
+  * Create a budget alert at **$1**
 
 ---
 
-1️⃣ Create AWS Account
+## 2️⃣ Launch EC2 Instance
 
-Sign up on Amazon Web Services
+* EC2 → Launch Instance
+* AMI: **Ubuntu 22.04 LTS**
+* Instance type: **t3.micro** ✅ (Free Tier eligible)
+* Key pair: Create & download `.pem`
+* Security Group:
 
-Enable Billing Alerts
-
-Create a budget alert at $1
-
-
-
-
----
-
-2️⃣ Launch EC2 Instance
-
-EC2 → Launch Instance
-
-AMI: Ubuntu 22.04 LTS
-
-Instance type: t3.micro ✅ (Free Tier eligible)
-
-Key pair: Create & download .pem
-
-Security Group:
-
-SSH (22)
-
-HTTP (80)
-
-HTTPS (443)
-
-
-
+  * SSH (22)
+  * HTTP (80)
+  * HTTPS (443)
 
 ---
 
-3️⃣ Connect to EC2
+## 3️⃣ Connect to EC2
 
+```bash
 ssh -i yourkey.pem ubuntu@<EC2_PUBLIC_IP>
-
+```
 
 ---
 
-4️⃣ Install Required Software
+## 4️⃣ Install Required Software
 
+```bash
 sudo apt update
 sudo apt install -y nodejs npm nginx git
+```
 
 Verify installation:
 
+```bash
 node -v
 npm -v
-
+```
 
 ---
 
-5️⃣ Upload Your MERN Project
+## 5️⃣ Upload Your MERN Project
 
+```bash
 git clone https://github.com/yourrepo/mern-app.git
 cd mern-app
-
+```
 
 ---
 
-6️⃣ Backend Setup (Express + Node.js)
+## 6️⃣ Backend Setup (Express + Node.js)
 
+```bash
 cd backend
 npm install
+```
 
-Create a .env file:
+Create a `.env` file:
 
+```env
 PORT=5000
 MONGO_URI=your_mongodb_atlas_uri
 JWT_SECRET=secret
-
+```
 
 ---
 
-✅ Run Backend Using PM2 (IMPORTANT)
+### ✅ Run Backend Using PM2 (IMPORTANT)
 
-❌ Do NOT leave node index.js running
-✅ Use PM2 so the backend survives SSH exit and EC2 restarts
+❌ Do **NOT** leave `node index.js` running
+✅ Use **PM2** so the backend survives SSH exit and EC2 restarts
 
+```bash
 sudo npm install -g pm2
 pm2 start index.js
+```
 
 Enable PM2 auto-start on reboot:
 
+```bash
 pm2 startup
+```
 
-⚠️ IMPORTANT
+⚠️ **IMPORTANT**
 PM2 will print a command similar to this:
 
+```bash
 sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
+```
 
-👉 COPY THIS ENTIRE COMMAND and RUN IT EXACTLY as shown
+👉 **COPY THIS ENTIRE COMMAND and RUN IT EXACTLY as shown**
 
 Then save the PM2 process list:
 
+```bash
 pm2 save
+```
 
 ✔ Backend will now auto-start automatically after EC2 reboot
 
+---
+
+## 7️⃣ MongoDB Atlas (Free & Safe)
+
+* Create an account on MongoDB Atlas
+* Create an **M0 Free Cluster**
+* Network Access:
+
+  * Allow IP: `0.0.0.0/0` (for college/demo use)
+* Copy the connection URI and paste it into backend `.env`
 
 ---
 
-7️⃣ MongoDB Atlas (Free & Safe)
+## 8️⃣ Frontend Setup (React + Vite)
 
-Create an account on MongoDB Atlas
-
-Create an M0 Free Cluster
-
-Network Access:
-
-Allow IP: 0.0.0.0/0 (for college/demo use)
-
-
-Copy the connection URI and paste it into backend .env
-
-
-
----
-
-8️⃣ Frontend Setup (React + Vite)
-
+```bash
 cd ../frontend
 npm install
 npm run build
+```
 
-⚠️ IMPORTANT (Vite vs CRA)
-Vite outputs build files into dist/, NOT build/
+⚠️ **IMPORTANT (Vite vs CRA)**
+Vite outputs build files into **`dist/`**, NOT `build/`
 
 Deploy frontend files:
 
+```bash
 sudo rm -rf /var/www/html/*
 sudo cp -r dist/* /var/www/html/
-
+```
 
 ---
 
-9️⃣ Configure Nginx (Reverse Proxy)
+## 9️⃣ Configure Nginx (Reverse Proxy)
 
 Open the Nginx default config:
 
+```bash
 sudo nano /etc/nginx/sites-available/default
+```
 
-Replace the entire file with:
+Replace the **entire file** with:
 
+```nginx
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -215,75 +212,60 @@ server {
         proxy_set_header Connection 'upgrade';
     }
 }
+```
 
 Test and restart Nginx:
 
+```bash
 sudo nginx -t
 sudo systemctl restart nginx
-
+```
 
 ---
 
-🔄 How to Restart / Update Frontend After Changes
+## 🔄 How to Restart / Update Frontend After Changes
 
-Whenever you change frontend code or frontend .env:
+Whenever you change **frontend code or frontend `.env`**:
 
+```bash
 cd frontend
 npm run build
 sudo rm -rf /var/www/html/*
 sudo cp -r dist/* /var/www/html/
 sudo systemctl reload nginx
+```
 
 ✔ No PM2 restart needed
 ✔ No EC2 restart needed
 
-
 ---
 
-🎉 Deployment Complete
+## 🎉 Deployment Complete
 
 Visit:
 
+```
 http://<EC2_PUBLIC_IP>
+```
 
-Your MERN application is live 🚀
-
-
----
-
-💸 How to NOT Burn AWS Free Tier Credits
-
-Use only one EC2 instance
-
-Use t3.micro
-
-Stop EC2 when not demoing
-
-Do NOT allocate Elastic IP
-
-Use MongoDB Atlas Free Tier only
-
-Keep billing alerts enabled
-
-
+Your **MERN application is live** 🚀
 
 ---
 
-🧪 Faculty Justification (Ready to Paste)
+## 💸 How to NOT Burn AWS Free Tier Credits
 
-> “The MERN application is deployed on AWS EC2 Free Tier using Nginx as a reverse proxy and PM2 for backend process management. MongoDB Atlas Free Tier is used to eliminate database costs while ensuring scalability.”
-
-
-
+* Use **only one EC2 instance**
+* Use **t3.micro**
+* Stop EC2 when not demoing
+* Do NOT allocate Elastic IP
+* Use MongoDB Atlas Free Tier only
+* Keep billing alerts enabled
 
 ---
 
-✅ Final Notes
+## ✅ Final Notes
 
-exit from SSH is safe
-
-EC2 stop → start works without reconfiguration
-
-Only the public IP may change
-
-No setup repetition required during demos
+* `exit` from SSH is safe
+* EC2 **stop → start works without reconfiguration**
+* Only the public IP may change
+* Update public ip for backend uris in frontend and rebuild
